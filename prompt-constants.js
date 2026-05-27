@@ -549,3 +549,19 @@ ${timelineWarning}${styleBlock}人设锁定：续写内容必须完全贴合小�
 矛盾规避：必须规避以下潜在剧情矛盾：${conflictWarning}
 小数据适配：若前文内容较少，严格遵循现有文本的叙事范式、对话模式、剧情节奏，不做风格跳脱的续写，不无限新增设定与人物`;
 }
+
+export function extractStyleGuidelines(mergedGraph) {
+    if (!mergedGraph?.全局文风标准) return '';
+    
+    const style = mergedGraph.全局文风标准;
+    const parts = [];
+    
+    if (style.文风规范) parts.push(`【文风规范】\n${style.文风规范}`);
+    if (style.文风要求) parts.push(`【文风要求】\n${style.文风要求}`);
+    if (style.文风示例) parts.push(`【文风示例】\n${style.文风示例}`);
+    if (style.发言规范) parts.push(`【发言规范】\n${style.发言规范}`);
+    if (style.发言要求) parts.push(`【发言要求】\n${style.发言要求}`);
+    if (style.发言示例) parts.push(`【发言示例】\n${style.发言示例}`);
+    
+    return parts.join('\n\n');
+}
