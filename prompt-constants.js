@@ -87,16 +87,22 @@ export const graphJsonSchema = {
                     "本章未回收伏笔": { "type": "string"}
                 }
             },
-            "文风特点": {
+             "文风特点": {
                 "type": "object",
-                "required": ["本章叙事视角", "语言风格", "对话特点", "常用修辞", "节奏特点", "与全文文风的匹配度说明"],
+                "required": ["本章叙事视角", "语言风格", "对话特点", "常用修辞", "节奏特点", "与全文文风的匹配度说明", "文风规范", "文风要求", "文风示例","发言规范", "发言要求", "发言示例"],
                 "properties": {
                     "本章叙事视角": { "type": "string"},
                     "语言风格": { "type": "string"},
                     "对话特点": { "type": "string"},
                     "常用修辞": { "type": "string"},
                     "节奏特点": { "type": "string"},
-                    "与全文文风的匹配度说明": { "type": "string"}
+                    "与全文文风的匹配度说明": { "type": "string"},
+                    "文风规范": { "type": "string" },
+                    "文风要求": { "type": "string" },
+                    "文风示例": { "type": "string" },
+                    "发言规范": { "type": "string" },
+                    "发言要求": { "type": "string" },
+                    "发言示例": { "type": "string" }
                 }
             },
             "实体关系网络": {
@@ -232,14 +238,20 @@ export const mergeGraphJsonSchema = {
             },
             "全局文风标准": {
                 "type": "object",
-                "required": ["固定叙事视角", "核心语言风格", "对话写作特点", "常用修辞与句式", "整体节奏规律", "场景描写习惯"],
+                "required": ["固定叙事视角", "核心语言风格", "对话写作特点", "常用修辞与句式", "整体节奏规律", "场景描写习惯","文风规范", "文风要求", "文风示例","发言规范", "发言要求", "发言示例"],
                 "properties": {
                     "固定叙事视角": { "type": "string"},
                     "核心语言风格": { "type": "string"},
                     "对话写作特点": { "type": "string"},
                     "常用修辞与句式": { "type": "string"},
                     "整体节奏规律": { "type": "string"},
-                    "场景描写习惯": { "type": "string"}
+                    "场景描写习惯": { "type": "string"},
+                    "文风规范": { "type": "string" },
+                    "文风要求": { "type": "string" },
+                    "文风示例": { "type": "string" },
+                    "发言规范": { "type": "string" },
+                    "发言要求": { "type": "string" },
+                    "发言示例": { "type": "string" }
                 }
             },
             "全量实体关系网络": {
@@ -340,13 +352,15 @@ export function getQualityEvaluateSystemPrompt(targetWordCount, actualWordCount,
 }
 
 export function getNovelWriteSystemPrompt(options) {
-    const { redLines, forbiddenRules, baseLastParagraph, foreshadowList, wordCount, conflictWarning } = options;
-    return `小说续写规则（100%遵守）：人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules}文本衔接：续写内容必须紧接在基准章节的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。基准章节的最后一段内容是："${baseLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。剧情承接：续写内容必须承接前文剧情，合理呼应以下伏笔：${foreshadowList}，开启新的章节内容，且与上述文本衔接要求一致。文风统一：续写内容必须完全贴合原小说的叙事风格、语言习惯、对话方式、节奏特点，和原文无缝衔接，无风格割裂剧情合理：续写内容要符合原小说的世界观设定，推动主线剧情发展，有完整的情节起伏、生动的细节、符合人设的对话输出要求：只输出续写的正文内容，不要任何标题、章节名、解释、备注、说明、分割线字数要求：续写约${wordCount}字，误差不超过10%矛盾规避：必须规避以下潜在剧情矛盾：${conflictWarning}小数据适配：若前文内容较少，严格遵循现有文本的叙事范式、对话模式、剧情节奏，不做风格跳脱的续写，不无限新增设定与人物`;
+    const { redLines, forbiddenRules, baseLastParagraph, foreshadowList, wordCount, conflictWarning, styleGuidelines } = options;
+    const styleBlock = styleGuidelines ? `\n【文风与发言详细规范】\n${styleGuidelines}\n` : '';
+    return `小说续写规则（100%遵守）：${styleBlock}人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules}文本衔接：续写内容必须紧接在基准章节的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。基准章节的最后一段内容是："${baseLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。剧情承接：续写内容必须承接前文剧情，合理呼应以下伏笔：${foreshadowList}，开启新的章节内容，且与上述文本衔接要求一致。文风统一：续写内容必须完全贴合原小说的叙事风格、语言习惯、对话方式、节奏特点，和原文无缝衔接，无风格割裂剧情合理：续写内容要符合原小说的世界观设定，推动主线剧情发展，有完整的情节起伏、生动的细节、符合人设的对话输出要求：只输出续写的正文内容，不要任何标题、章节名、解释、备注、说明、分割线字数要求：续写约${wordCount}字，误差不超过10%矛盾规避：必须规避以下潜在剧情矛盾：${conflictWarning}小数据适配：若前文内容较少，严格遵循现有文本的叙事范式、对话模式、剧情节奏，不做风格跳脱的续写，不无限新增设定与人物`;
 }
 
 export function getContinueWriteSystemPrompt(options) {
-    const { redLines, forbiddenRules, targetLastParagraph, foreshadowList, wordCount, conflictWarning, targetChapterTitle } = options;
-    return `小说续写规则（100%遵守）： 人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines} 设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules} 文本衔接：续写内容必须紧接在上一章（续写章节 ${targetChapterTitle}）的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。上一章的最后一段内容是："${targetLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。 剧情承接：续写内容必须承接前文所有剧情，合理呼应以下伏笔：${foreshadowList}，开启新章节，且与上述文本衔接要求一致，不得重复前文已有的情节。 文风统一：续写内容必须完全贴合原小说的叙事风格、语言习惯、对话方式、节奏特点，和原文无缝衔接，无风格割裂 剧情合理：续写内容要符合原小说的世界观设定，推动主线剧情发展，有完整的情节起伏、生动的细节、符合人设的对话 输出要求：只输出续写的正文内容，不要任何标题、章节名、解释、备注、说明、分割线 字数要求：续写约${wordCount}字，误差不超过10% 矛盾规避：必须规避以下潜在剧情矛盾：${conflictWarning} 小数据适配：若前文内容较少，严格遵循现有文本的叙事范式、对话模式、剧情节奏，不做风格跳脱的续写，不无限新增设定与人物`;
+    const { redLines, forbiddenRules, targetLastParagraph, foreshadowList, wordCount, conflictWarning, targetChapterTitle, styleGuidelines } = options;
+    const styleBlock = styleGuidelines ? `\n【文风与发言详细规范】\n${styleGuidelines}\n` : '';
+    return `小说续写规则（100%遵守）：${styleBlock}人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines} 设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules} 文本衔接：续写内容必须紧接在上一章（续写章节 ${targetChapterTitle}）的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。上一章的最后一段内容是："${targetLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。 剧情承接：续写内容必须承接前文所有剧情，合理呼应以下伏笔：${foreshadowList}，开启新章节，且与上述文本衔接要求一致，不得重复前文已有的情节。 文风统一：续写内容必须完全贴合原小说的叙事风格、语言习惯、对话方式、节奏特点，和原文无缝衔接，无风格割裂 剧情合理：续写内容要符合原小说的世界观设定，推动主线剧情发展，有完整的情节起伏、生动的细节、符合人设的对话 输出要求：只输出续写的正文内容，不要任何标题、章节名、解释、备注、说明、分割线 字数要求：续写约${wordCount}字，误差不超过10% 矛盾规避：必须规避以下潜在剧情矛盾：${conflictWarning} 小数据适配：若前文内容较少，严格遵循现有文本的叙事范式、对话模式、剧情节奏，不做风格跳脱的续写，不无限新增设定与人物`;
 }
 
 /**
@@ -494,14 +508,14 @@ export function filterGraphByTimeline(mergedGraph, baseChapterId) {
  * @returns {string} - 系统提示词
  */
 export function getTimelineSafeWriteSystemPrompt(options) {
-    const { redLines, forbiddenRules, baseLastParagraph, foreshadowList, wordCount, conflictWarning, baseChapterId } = options;
+    const { redLines, forbiddenRules, baseLastParagraph, foreshadowList, wordCount, conflictWarning, baseChapterId, styleGuidelines } = options;
     const timelineWarning = baseChapterId 
         ? `【重要】当前续写基准章节为第${baseChapterId}章，续写内容只能基于第${baseChapterId}章及之前发生的情节，绝对不能提前透露或暗示第${baseChapterId}章之后的剧情发展、角色命运或事件结果。如果前文没有明确铺垫，不能凭空创造角色关系或事件。`
         : '';
+    const styleBlock = styleGuidelines ? `\n【文风与发言详细规范】\n${styleGuidelines}\n` : '';
     
     return `小说续写规则（100%遵守）：
-${timelineWarning}
-人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}
+${timelineWarning}${styleBlock}人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}
 设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules}
 文本衔接：续写内容必须紧接在基准章节的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。基准章节的最后一段内容是："${baseLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。
 剧情承接：续写内容必须承接前文剧情，合理呼应以下伏笔：${foreshadowList}，开启新的章节内容，且与上述文本衔接要求一致。
@@ -517,14 +531,14 @@ ${timelineWarning}
  * 构建时间线安全的续写提示词（从续写章节继续）
  */
 export function getTimelineSafeContinueWriteSystemPrompt(options) {
-    const { redLines, forbiddenRules, targetLastParagraph, foreshadowList, wordCount, conflictWarning, targetChapterTitle, baseChapterId } = options;
+    const { redLines, forbiddenRules, targetLastParagraph, foreshadowList, wordCount, conflictWarning, targetChapterTitle, baseChapterId, styleGuidelines } = options;
     const timelineWarning = baseChapterId 
         ? `【重要】当前续写基准章节为第${baseChapterId}章，所有续写内容只能基于第${baseChapterId}章及之前发生的情节，绝对不能提前透露或暗示第${baseChapterId}章之后的剧情发展、角色命运或事件结果。如果前文没有明确铺垫，不能凭空创造角色关系或事件。`
         : '';
+    const styleBlock = styleGuidelines ? `\n【文风与发言详细规范】\n${styleGuidelines}\n` : '';
     
     return `小说续写规则（100%遵守）：
-${timelineWarning}
-人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}
+${timelineWarning}${styleBlock}人设锁定：续写内容必须完全贴合小说的核心人物设定，绝对不能出现人设崩塌（OOC），严格遵守以下人设红线：${redLines}
 设定合规：续写内容必须完全符合小说的世界观设定，绝对不能出现吃书、新增违规设定、违反原有规则的问题，严格遵守以下设定禁区：${forbiddenRules}
 文本衔接：续写内容必须紧接在上一章（续写章节 ${targetChapterTitle}）的最后一段之后开始，从那个地方继续写下去，确保文本连续，逻辑自洽。上一章的最后一段内容是："${targetLastParagraph}"续写必须从这段文字之后直接开始，不能重复这段内容。
 剧情承接：续写内容必须承接前文所有剧情，合理呼应以下伏笔：${foreshadowList}，开启新章节，且与上述文本衔接要求一致，不能重复前文已有的情节。
