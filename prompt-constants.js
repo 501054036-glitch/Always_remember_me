@@ -340,7 +340,7 @@ export const CONTINUE_CHAPTER_GRAPH_SYSTEM_PROMPT = `触发词：构建单章节
 export function getSingleChapterGraphPrompt(chapter, isModified = false) {
     const trigger = isModified ? '构建单章节知识图谱JSON、小说魔改章节解析' : '构建单章节知识图谱JSON、小说章节解析';
     const contentDesc = isModified ? '魔改后章节内容' : '小说章节内容';
-    return `触发词：${trigger} 强制约束（100%遵守）： 输出必须为纯JSON格式，无任何前置/后置内容、注释、markdown 必须以{开头，以}结尾，无其他字符 仅基于提供的${contentDesc}分析，不引入任何外部内容 严格包含所有要求的字段，不修改字段名 无对应内容设为"暂无"，数组设为[]，不得留空 必须实现全链路双向可追溯，所有信息必须关联对应原文位置 同一人物、设定、事件不能重复出现，同一人物的不同别名必须合并为同一个唯一实体条目 基础章节信息必须填写：章节号=${chapter.id}，章节节点唯一标识=chapter_${chapter.id}，本章字数=${chapter.content.length} 必填字段：基础章节信息、人物信息、世界观设定、核心剧情线、文风特点、实体关系网络、变更与依赖信息、逆向分析洞察`;
+    return `触发词：${trigger} 强制约束（100%遵守）： 输出必须为纯JSON格式，无任何前置/后置内容、注释、markdown 必须以{开头，以}结尾，无其他字符 仅基于提供的${contentDesc}分析，不引入任何外部内容 严格包含所有要求的字段，不修改字段名 无对应内容设为"暂无"，数组设为[]，不得留空 必须实现全链路双向可追溯，所有信息必须关联对应原文位置 同一人物、设定、事件不能重复出现，同一人物的不同别名必须合并为同一个唯一实体条目 基础章节信息必须填写：章节号=${chapter.id}，章节节点唯一标识=chapter_${chapter.id}，本章字数=${chapter.content.length} 必须在"文风特点"中详细提取本章的文风规范、文风要求、文风示例、发言规范、发言要求、发言示例，要求完整、具体，包含可以直接复用的描述和示例原文 必填字段：基础章节信息、人物信息、世界观设定、核心剧情线、文风特点、实体关系网络、变更与依赖信息、逆向分析洞察`;
 }
 
 export function getPrecheckSystemPrompt(baseId) {
